@@ -3,7 +3,7 @@ package com.example.java_project;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.java_project")
 public class JavaProjectApplication {
 
     public static void main(String[] args) {
