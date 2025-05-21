@@ -10,52 +10,52 @@ import java.util.Collections;
 
 @Data
 @Entity
-@Table(name = "users")  // Указание имени таблицы
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)  // Указание уникальности и обязательности
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)  // Обязательное поле
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "first_name")  // Имя столбца в БД
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")  // Имя столбца в БД
+    @Column(name = "last_name")
     private String lastName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();  // Возвращает пустой список, можно настроить роли в будущем
+        return Collections.emptyList();
     }
 
     @Override
     public String getUsername() {
-        return email;  // Для UserDetails используется email в качестве имени пользователя
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;  // Учетная запись не истекла
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;  // Учетная запись не заблокирована
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;  // Учетные данные не истекли
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;  // Пользователь включен
+        return true;
     }
 }
