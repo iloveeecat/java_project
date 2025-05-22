@@ -1,6 +1,8 @@
 package com.example.java_project.service;
 
 import com.example.java_project.entity.Category;
+import com.example.java_project.exception.CategoryExistsException;
+import com.example.java_project.exception.CategoryMissingException;
 import com.example.java_project.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category save(Category category) {
         Optional<Category> existedCategory = categoryRepository.findByName(category.getName());
-        if (existedCategory.isPresent()) throw new CategoryAlreadyExistsExeption();
+        if (existedCategory.isPresent()) throw new CategoryExistsException();
         return categoryRepository.save(category);
     }
 
@@ -27,6 +29,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(ThereNoCategoryException::new);
+        return categoryRepository.findByName(name).orElseThrow(CategoryMissingException::new);
     }
 }

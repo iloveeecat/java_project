@@ -19,21 +19,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/flowers/**").permitAll()  // Разрешаем доступ ко всем API для цветов
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults()); // Включаем Basic Auth
-
+                        .requestMatchers("/api/flowers/**").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withUsername("user")
-                .password(passwordEncoder().encode("password")) // Используем BCrypt для пароля
-                .roles("USER")
-                .build();
-
+                .password(passwordEncoder().encode("password")).roles("USER").build();
         return new InMemoryUserDetailsManager(user);
     }
 

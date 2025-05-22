@@ -17,13 +17,11 @@ public class AuthService {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("email already in use");
         }
-
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
-
         userRepository.save(user);
     }
 }
