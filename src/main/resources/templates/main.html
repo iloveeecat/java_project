@@ -40,6 +40,7 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
         .product img {
             max-width: 100%;
@@ -60,6 +61,26 @@
             padding: 15px;
             margin-top: 40px;
         }
+        .top-buttons {
+            text-align: right;
+            padding: 10px 20px;
+        }
+        .top-buttons a {
+            background-color: #f06292;
+            color: white;
+            padding: 8px 12px;
+            margin-left: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .filter-bar {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .filter-bar select {
+            padding: 8px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -69,13 +90,28 @@
     <p>Свежие цветы с доставкой по городу</p>
 </header>
 
+<div class="top-buttons">
+    <a href="/login">Вход</a>
+    <a href="/register">Регистрация</a>
+</div>
+
 <nav>
-    <a href="#">Главная</a>
-    <a href="#">Каталог</a>
-    <a href="#">О нас</a>
-    <a href="#">Контакты</a>
-    <a href="#">Корзина</a>
+    <a href="/">Главная</a>
+    <a href="/catalog">Каталог</a>
+    <a href="/about">О нас</a>
+    <a href="/contacts">Контакты</a>
+    <a href="/cart">Корзина</a>
 </nav>
+
+<div class="filter-bar">
+    <label for="category">Категория:</label>
+    <select id="category" onchange="filterFlowers()">
+        <option value="">Все</option>
+        <option value="Розы">Букеты</option>
+        <option value="Тюльпаны">Комнатные растения</option>
+        <option value="Лилии">Экзотические цветы</option>
+    </select>
+</div>
 
 <main class="container" id="productContainer">
 </main>
@@ -85,26 +121,40 @@
 </footer>
 
 <script>
+    let allFlowers = [];
+
     async function loadFlowers() {
         try {
             const response = await fetch('http://localhost:8082/api/flowers');
-            const flowers = await response.json();
-
-            const productContainer = document.getElementById('productContainer');
-            flowers.forEach(flower => {
-                const productDiv = document.createElement('div');
-                productDiv.classList.add('product');
-                productDiv.innerHTML = `
-                    <img src="${flower.imageUrl}" alt="${flower.name}">
-                    <h3>${flower.name}</h3>
-                    <p>Цена: ${flower.price} ₽</p>
-                    <button>В корзину</button>
-                `;
-                productContainer.appendChild(productDiv);
-            });
+            allFlowers = await response.json();
+            renderFlowers(allFlowers);
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
         }
+    }
+
+    function renderFlowers(flowers) {
+        const productContainer = document.getElementById('productContainer');
+        productContainer.innerHTML = '';
+        flowers.forEach(flower => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.onclick = () => window.location.href = `/flower/${flower.id}`;
+            productDiv.innerHTML = `
+                <img src="${flower.imageUrl}" alt="${flower.name}">
+                <h3>${flower.name}</h3>
+                <p>Категория: ${flower.category}</p>
+                <p>Цена: ${flower.price} ₽</p>
+                <button>В корзину</button>
+            `;
+            productContainer.appendChild(productDiv);
+        });
+    }
+
+    function filterFlowers() {
+        const category = document.getElementById('category').value;
+        const filtered = category ? allFlowers.filter(f => f.category === category) : allFlowers;
+        renderFlowers(filtered);
     }
 
     window.onload = loadFlowers;
@@ -112,4 +162,3 @@
 
 </body>
 </html>
-
